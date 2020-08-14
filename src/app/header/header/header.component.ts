@@ -11,14 +11,14 @@ import * as AuthActions from '../../auth/store/auth.actions';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  menu = [{ link: 'questions', name: 'questions' }];
+  menu: { link: string; name: string }[] = [
+    { link: 'questions', name: 'questions' },
+    { link: 'profile', name: 'profile' }
+  ];
   isAuthenticated: boolean;
   isLoading: boolean;
 
-  constructor(
-    private store: Store<fromApp.AppState>,
-    private router: Router,
-  ) {}
+  constructor(private store: Store<fromApp.AppState>, private router: Router) {}
 
   ngOnInit(): void {
     this.store.pipe(select('auth')).subscribe((authState) => {
