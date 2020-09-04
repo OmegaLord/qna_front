@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ProfileComponent implements OnInit {
   user: User;
   noProfileImagePath = environment.profile.avatarMissImagePath;
+  errorMessage: string;
 
   getUrl() {
     return this.user?.profile?.avatar
@@ -45,7 +46,13 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe((data) => console.log(data));
+    this.activatedRoute.data.subscribe(
+      (data) => (this.user = data.user.user),
+      (error) => { 
+        console.log(error)
+        // this.errorMessage = error.massege;
+      }
+    );
   }
 
   constructor(

@@ -17,6 +17,6 @@ export class ProfileInfoComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.parent.data.subscribe((data) => (this.user = data.user));
+    this.route.parent.data.subscribe((data) => (this.user = data.user.user));
   }
 }

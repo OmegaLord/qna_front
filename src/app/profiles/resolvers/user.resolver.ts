@@ -3,19 +3,18 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { User } from '../../shared/user.model';
+import { User, UserResolved } from '../../shared/user.model';
 import { ApiService } from '../../api.service';
-import { Observable, of, iif, defer } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 
 import * as fromApp from '../../store/app.reducers';
-import { switchMap, withLatestFrom, map, switchMapTo } from 'rxjs/operators';
+import { take, pluck, exhaustMap, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class UserResolver implements Resolve<User> {
+export class UserResolver implements Resolve<UserResolved> {
   constructor(
     private store: Store<fromApp.AppState>,
     private apiService: ApiService
@@ -24,16 +23,18 @@ export class UserResolver implements Resolve<User> {
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<User> | User {
+  ): UserResolved | Observable<UserResolved> | Promise<UserResolved> {
     return this.store.pipe(
       select('auth'),
-      map((authState) => authState.user),
-      map((user) => {
-        // if (route.paramMap.get('id') && +route.paramMap.get('id') === user.id) {
-          return user;
-        // } else {
-        //   this.apiService.getUser(route.paramMap.get('id'));
-        // }
+      pluck('user'),
+      take(1),
+      exhaustMap((user) => {
+        return route.paramMap.get('id') && +route.paramMap.get('id') !== user.id
+          ? of({ user: this.apiService.getUser(route.paramMap.get('id')) })
+          : of({ user: user });
+      }),
+      catchError((error) => {
+        return of(error);
       })
     );
   }

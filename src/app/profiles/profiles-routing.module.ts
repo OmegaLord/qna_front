@@ -13,6 +13,7 @@ const profilesRoutes: Routes = [
       { path: '', component: ProfileInfoComponent },
       { path: 'edit', component: ProfileEditComponent },
     ],
+    resolve: { user: UserResolver },
   },
   {
     path: ':id',

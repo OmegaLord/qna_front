@@ -17,15 +17,14 @@
         <li class="nav-item" *ngIf="!isAuthenticated">
           <a class="nav-link" (click)="signUp()">Sign Up</a>
         </li>
-        <li class="nav-item" *ngIf="isAuthenticated"></li>
-        <li>
+        <li *ngIf="isAuthenticated">
           <div class="dropdown" appDropdown>
             <img
               class="dropdown-toggle profile-icon"
               src="/assets/profiles/no-profile-photo.png"
             />
             <div class="dropdown-menu">
-              <a class="dropdown-item" [routerLink]="['profile']">Profile</a>
+              <a class="dropdown-item" [routerLink]="['users']">Profile</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item text-danger" (click)="logout()">
                 Logout
