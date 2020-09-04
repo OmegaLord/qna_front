@@ -93,7 +93,7 @@ const authReducer$ = createReducer(
     loading: true,
     authenticated: false,
     error: null,
-  }))
+  })),
 );
 
 export function authReducer(state: State | undefined, action: Action) {

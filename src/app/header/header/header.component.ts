@@ -13,7 +13,6 @@ import * as AuthActions from '../../auth/store/auth.actions';
 export class HeaderComponent implements OnInit {
   menu: { link: string; name: string }[] = [
     { link: 'questions', name: 'questions' },
-    { link: 'profile', name: 'profile' }
   ];
   isAuthenticated: boolean;
   isLoading: boolean;

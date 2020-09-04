@@ -137,6 +137,17 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  updateProfile$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.updateProfile),
+      switchMap((action) =>
+        this.authService
+          .updateProfile(action.user, action.profileParams)
+          .pipe(switchMap(() => of(AuthActions.getUser())))
+      )
+    )
+  );
+
   private handleError(errorRes: HttpErrorResponse) {
     const {
       errors: { ...errors },

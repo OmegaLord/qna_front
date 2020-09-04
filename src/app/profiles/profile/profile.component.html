@@ -1,11 +1,17 @@
-<div class="row">
+<div class="row mt-3">
   <div class="col">
-    <img [src]="getUrl()" style="width: 100%;" alt="" />
+    <label for="fileInput" class="avatar">
+      <span class="avatar-edit"></span>
+      <img [src]="getUrl()" class="avatar-img" />
+    </label>
+    <input
+      id="fileInput"
+      (change)="onSelectFile($event)"
+      type="file"
+    />
   </div>
 
-  <div class="col">
-    <p>Email: {{ user.email }}</p>
-    <p>First name: {{ user.profile.firstName }}</p>
-    <p>Last name: {{ user.profile.lastName }}</p>
+  <div class="col-8">
+    <router-outlet></router-outlet>
   </div>
 </div>

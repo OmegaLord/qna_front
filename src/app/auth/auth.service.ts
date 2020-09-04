@@ -5,6 +5,7 @@ import { AuthParams } from '../shared/auth.interface';
 import { User } from '../shared/user.model';
 import { environment } from 'src/environments/environment';
 import { Token } from '../shared/token.interface';
+import { Profile } from '../shared/profile.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -37,6 +38,13 @@ export class AuthService {
     return this.http.patch(`${this.apiUrl}/api/v1/users/password.json`, {
       user: { ...resetPasswordParams },
     });
+  }
+
+  updateProfile(user: User, profileParams: Profile) {
+    return this.http
+      .patch<User>(`${this.apiUrl}/api/v1/users/${user.id}/profile.json`, {
+        profile: profileParams,
+      })
   }
 
   constructor(private http: HttpClient) {}
