@@ -11,7 +11,22 @@ import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
 import * as fromApp from '../../store/app.reducers';
-import { take, pluck, exhaustMap, catchError } from 'rxjs/operators';
+import {
+  take,
+  pluck,
+  exhaustMap,
+  catchError,
+  map,
+  distinctUntilChanged,
+  tap,
+  delay,
+  mapTo,
+  withLatestFrom,
+  first,
+  switchMap,
+  exhaust,
+  mergeMap,
+} from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UserResolver implements Resolve<UserResolved> {
@@ -20,22 +35,28 @@ export class UserResolver implements Resolve<UserResolved> {
     private apiService: ApiService
   ) {}
 
+  user: User;
+
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): UserResolved | Observable<UserResolved> | Promise<UserResolved> {
-    return this.store.pipe(
-      select('auth'),
-      pluck('user'),
-      take(1),
-      exhaustMap((user) => {
-        return route.paramMap.get('id') && +route.paramMap.get('id') !== user.id
-          ? of({ user: this.apiService.getUser(route.paramMap.get('id')) })
-          : of({ user: user });
-      }),
-      catchError((error) => {
-        return of(error);
-      })
-    );
+    this.store
+      .pipe(select('auth'), pluck('user'), take(1), tap((user) => console.log(user)))
+      .subscribe((user) => (this.user = user));
+
+    return +route.paramMap.get('id') === this.user.id
+      ? of({ user: this.user, allowEdit: true })
+      : this.apiService.getUser(route.paramMap.get('id')).pipe(
+          map((userGet) => ({
+            user: userGet,
+            allowEdit: userGet.id === userGet.id,
+          }))
+        );
+    // catchError((error) => of({ user: undefined, error: error.statusText }))
   }
 }
+
+// delay(1000),
+//
+// distinctUntilChanged((prevState, currState) => prevState === currState),

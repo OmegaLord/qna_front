@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from '../../store/app.reducers';
 import { User } from 'src/app/shared/user.model';
 
 @Component({
@@ -9,14 +12,18 @@ import { User } from 'src/app/shared/user.model';
 })
 export class ProfileInfoComponent implements OnInit {
   user: User;
+  allowEdit = true;
 
   onEdit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
-
   ngOnInit(): void {
-    this.route.parent.data.subscribe((data) => (this.user = data.user.user));
+    this.route.data.subscribe(({ user: { user, allowEdit } }) => {
+      this.user = user;
+      this.allowEdit = allowEdit;
+    });
   }
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
 }

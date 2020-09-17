@@ -7,9 +7,11 @@ export interface User {
   email: string;
   role: Role;
   profile: Profile;
+  error?: any;
 }
 
 export interface UserResolved {
-  user: User | Observable<User>;
+  user: User;
+  allowEdit?: boolean;
   error?: any;
 }

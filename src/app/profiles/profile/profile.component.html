@@ -12,7 +12,7 @@
   </div>
 
   <div class="col-8">
-    <p *ngIf="errorMessage">{{errorMessage | json}}</p>
-    <router-outlet></router-outlet>
+    <p *ngIf="errorMessage">{{errorMessage}}</p>
+    <router-outlet *ngIf="user"></router-outlet>
   </div>
 </div>

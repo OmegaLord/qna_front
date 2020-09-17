@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromApp from '../../store/app.reducers';
 import * as AuthActions from '../../auth/store/auth.actions';
-import { User } from 'src/app/shared/user.model';
+import { User, UserResolved } from 'src/app/shared/user.model';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 
@@ -47,10 +47,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(
-      (data) => (this.user = data.user.user),
-      (error) => { 
-        console.log(error)
-        // this.errorMessage = error.massege;
+      ({ user: { user, error } }: { user: UserResolved }) => {
+        error ? (this.errorMessage = error) : (this.user = user);
       }
     );
   }

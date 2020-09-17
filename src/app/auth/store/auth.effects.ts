@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
@@ -9,6 +10,7 @@ import {
   tap,
   switchMap,
   withLatestFrom,
+  finalize,
 } from 'rxjs/operators';
 
 import { AuthService } from '../auth.service';
@@ -141,9 +143,10 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.updateProfile),
       switchMap((action) =>
-        this.authService
-          .updateProfile(action.user, action.profileParams)
-          .pipe(switchMap(() => of(AuthActions.getUser())))
+        this.authService.updateProfile(action.user, action.profileParams).pipe(
+          switchMap(() => of(AuthActions.getUser())),
+          // finalize(() => this.location.back())
+        )
       )
     )
   );
@@ -181,6 +184,8 @@ export class AuthEffects {
     private authService: AuthService,
     private actions$: Actions,
     private router: Router,
-    private store: Store<fromApp.AppState>
+    private store: Store<fromApp.AppState>,
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 }

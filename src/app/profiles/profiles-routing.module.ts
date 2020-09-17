@@ -7,25 +7,30 @@ import { UserResolver } from './resolvers/user.resolver';
 
 const profilesRoutes: Routes = [
   {
-    path: '',
-    component: ProfileComponent,
-    children: [
-      { path: '', component: ProfileInfoComponent },
-      { path: 'edit', component: ProfileEditComponent },
-    ],
-    resolve: { user: UserResolver },
-  },
-  {
     path: ':id',
     component: ProfileComponent,
     children: [
       {
         path: '',
         component: ProfileInfoComponent,
+        resolve: { user: UserResolver },
       },
+      { path: 'edit', component: ProfileEditComponent },
     ],
     resolve: { user: UserResolver },
   },
+  // {
+  //   path: ':id',
+  //   component: ProfileComponent,
+  //   children: [
+  //     {
+  //       path: '',
+  //       component: ProfileInfoComponent,
+  //     },
+  //     { path: 'edit', component: ProfileEditComponent },
+  //   ],
+  //   resolve: { user: UserResolver },
+  // },
 ];
 
 @NgModule({

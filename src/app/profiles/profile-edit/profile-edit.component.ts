@@ -23,7 +23,6 @@ export class ProfileEditComponent implements OnInit {
         profileParams: { ...this.profileForm.value },
       })
     );
-    this.goBack();
   }
 
   onBack() {
